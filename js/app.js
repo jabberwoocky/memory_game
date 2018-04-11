@@ -3,19 +3,25 @@ let cards = ['diamond', 'diamond','anchor','anchor','bolt','bolt','cube','cube',
 let deck = document.getElementsByClassName('deck')[0];
 let restart = document.getElementsByClassName('restart')[0];
 let moves = $('.moves');
-let matched = 0;  // counter of matched cards
-let startTime, endTime;
+let timer, clock, clockResult,matched;
 let rating = [16,22,28]; //set rating
 let stars = $('.fa-star');
 
 function start(){
+  clock = 0;
+  matched = 0;
+  $('.timer').remove();
+  timer = setInterval(function(){ myTimer();}, 100);
   let shuffledCards = shuffle(cards); // first shuffle array cards creating new array shuffledCards; (shuffled using function shuffle)
-  startTime = Date.now(); // turn stopwatch on
   deck.innerHTML = ''; //empty deck
   counter = 0; //set counter of moves to zero;
-  moves.text(counter); //assign value of counter to moves displayed
+  moves.text(counter +' Moves'); //assign value of counter to moves displayed
   restart.addEventListener('click', start);  // add event listener to restart button
   resetRating(); //reset stars
+  const setTimer = document.createElement('div');
+  $(setTimer).addClass('timer');
+  $(setTimer).insertBefore( $('.restart') );
+
   // empty deck first and create loop inserting cards from shuffled array
 
     for (let i = 0; i < shuffledCards.length; i++){
@@ -47,13 +53,13 @@ function showCard (evt) {
     let openedCards =document.getElementsByClassName('open show');  //check which cards are opened
         $(evt.target).toggleClass('open show'); //opening card only in case it's not opened already
         counter ++;
-        moves.text(counter);
+        moves.text(counter + ' Moves');
         checkRating();  //checking current rating
         if (openedCards.length == 2){  // if two cards are opened they are checked for match
           checkMatch();
+
           }
       }
-
 // checking number of moves and changes star rating
 function checkRating (){
   if(counter > rating[0] && counter < rating[1]){
@@ -61,9 +67,6 @@ function checkRating (){
     }
   else if (counter > rating[1] && counter <rating[2]) {
     stars.eq(1).removeClass('fa-star').addClass('fa-star-o');
-  }
-  else if(counter > rating[2]){
-    stars.eq(0).removeClass('fa-star').addClass('fa-star-o');
   }
 }
 function resetRating(){
@@ -73,7 +76,7 @@ function resetRating(){
 // function closing open cards
 function closeCards () {
     openCards = $('.show');
-    openCards.removeClass( 'show open')
+    openCards.removeClass( 'show open');
     openCards[0].addEventListener('click',showCard); // add listner back to cards (not sure how to add it to both of them)
     openCards[1].addEventListener('click',showCard);
     openCards = '';
@@ -87,22 +90,51 @@ function checkMatch () {
     matched++;
 
     if (matched == cards.length/2){  // checking if all cards were matched
-      setTimeout(function(){ finish() }, 250); // set delay as it was finishing before showing last card
+      setTimeout(function(){ finish(); }, 300); // set delay as it was finishing before showing last card
     }
   } else {
-    setTimeout(function(){ closeCards() }, 400);  // if there is no match cards will be closed with preset delay
+    setTimeout(function(){ closeCards(); }, 250);  // if there is no match cards will be closed with preset delay
     }
 }
+// function counting time from starting game
 
+function myTimer() {
+    clock += 0.1;
+    clockResult = Math.round(clock*10)/10; //round clock
+    document.getElementsByClassName('timer')[0].innerHTML = 'Time: ' + clockResult;
+  }
+
+// function stopping timer
+
+function stopTimer() {
+    clearInterval(timer);
+}
+
+// function creating new element and insetring it before indicated element
+
+function createElement (elName,type,id,html,before) {
+  var elName = document.createElement(type);
+  elName.innerHTML = html;
+  elName.id = id;
+  $(elName).insertBefore( $(before) );
+  }
 //function closing game and showing results
+
 function finish (){
-  endTime = Date.now(); // turn stopwatch off
-  let time = (endTime - startTime) /1000;  // calculate elapsed time in seconds
-  $(deck).remove(); //remove deck
-  const finalScore = document.createElement('h2'); // display score
-  finalScore.innerHTML ='CONGRATULATIONS !!!<p>You matched all cards in</p><p>'+ counter +' moves and ' + time +' seconds</p>';
-  document.getElementsByClassName('score-panel')[0].appendChild(finalScore);
+  $(deck).remove();//remove deck
+  $('.timer').remove(); //remove timer
+  $('.moves').remove(); // remove Moves counter
+  stopTimer(); // stop the clock
+
+  createElement('congrats','p','congratsID','<p>CONGRATULATIONS !!!</p>'+
+  '<p>You matched all cards in</p><p>'+ counter +' moves and ' + clockResult +
+  ' seconds</p>',".restart");
+  createElement('rating','p','ratingID','<p>Your rating is:</p>',".restart");
+  $('.stars').insertBefore( $('.restart') );
+  createElement('repeat','p','repeatID','<p>If you want to play again hit restart button</p>',".restart");
+
   //change function of restart button from reset to reload page
+
   restart.addEventListener('click', function reload ()
       {
         window.location.reload(true);
