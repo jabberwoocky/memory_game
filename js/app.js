@@ -11,9 +11,9 @@ let stars = $('.fa-star');
 function start(){
   let shuffledCards = shuffle(cards); // first shuffle array cards creating new array shuffledCards; (shuffled using function shuffle)
   startTime = Date.now(); // turn stopwatch on
-  deck.innerHTML = ''; //empty
-  counter = 0;
-  moves.text(counter);
+  deck.innerHTML = ''; //empty deck
+  counter = 0; //set counter of moves to zero;
+  moves.text(counter); //assign value of counter to moves displayed
   restart.addEventListener('click', start);  // add event listener to restart button
   resetRating(); //reset stars
   // empty deck first and create loop inserting cards from shuffled array
@@ -22,7 +22,7 @@ function start(){
         const newElement = document.createElement('li');
         $(newElement).addClass('card');
         newElement.innerHTML = '<i class="fa fa-' + shuffledCards[i] + '"></i>';
-        newElement.addEventListener('click', showCard);
+        newElement.addEventListener('click', showCard);  //add event listener to all cards triggering function showing card
         deck.appendChild(newElement);
       }
   }
@@ -44,18 +44,15 @@ function shuffle(array) {
 
 function showCard (evt) {
     evt.target.removeEventListener('click',showCard);  //remove event listener, so the same card cannot be clicked again
-    let openedCards =document.getElementsByClassName('open show');
-      if ($(evt.target).hasClass('open')){
-      } else {
-        $(evt.target).addClass('open show');
+    let openedCards =document.getElementsByClassName('open show');  //check which cards are opened
+        $(evt.target).toggleClass('open show'); //opening card only in case it's not opened already
         counter ++;
         moves.text(counter);
-        checkRating();
-        if (openedCards.length == 2){
+        checkRating();  //checking current rating
+        if (openedCards.length == 2){  // if two cards are opened they are checked for match
           checkMatch();
           }
       }
-    }
 
 // checking number of moves and changes star rating
 function checkRating (){
@@ -111,11 +108,9 @@ function finish (){
         window.location.reload(true);
       }
     );
-
 }
 
 start();
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
