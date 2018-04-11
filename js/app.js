@@ -3,7 +3,7 @@ let cards = ['diamond', 'diamond','anchor','anchor','bolt','bolt','cube','cube',
 let deck = document.getElementsByClassName('deck')[0];
 let restart = document.getElementsByClassName('restart')[0];
 let moves = $('.moves');
-let timer, clock, clockResult,matched;
+let timer, clock, matched;
 let rating = [16,22,28]; //set rating
 let stars = $('.fa-star');
 
@@ -11,7 +11,7 @@ function start(){
   clock = 0;
   matched = 0;
   $('.timer').remove();
-  timer = setInterval(function(){ myTimer();}, 100);
+  timer = setInterval(function(){ myTimer();}, 1000);
   let shuffledCards = shuffle(cards); // first shuffle array cards creating new array shuffledCards; (shuffled using function shuffle)
   deck.innerHTML = ''; //empty deck
   counter = 0; //set counter of moves to zero;
@@ -99,9 +99,8 @@ function checkMatch () {
 // function counting time from starting game
 
 function myTimer() {
-    clock += 0.1;
-    clockResult = Math.round(clock*10)/10; //round clock
-    document.getElementsByClassName('timer')[0].innerHTML = 'Time: ' + clockResult;
+    clock += 1;
+    document.getElementsByClassName('timer')[0].innerHTML = 'Time: ' + clock;
   }
 
 // function stopping timer
@@ -127,7 +126,7 @@ function finish (){
   stopTimer(); // stop the clock
 
   createElement('congrats','p','congratsID','<p>CONGRATULATIONS !!!</p>'+
-  '<p>You matched all cards in</p><p>'+ counter +' moves and ' + clockResult +
+  '<p>You matched all cards in</p><p>'+ counter +' moves and ' + clock +
   ' seconds</p>',".restart");
   createElement('rating','p','ratingID','<p>Your rating is:</p>',".restart");
   $('.stars').insertBefore( $('.restart') );
