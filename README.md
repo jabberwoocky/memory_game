@@ -4,6 +4,7 @@
 
 * [Overview](#Overview)
 * [Game](#Game)
+* [Dependencies](#Dependencies)
 
 
 ## Overview
@@ -23,3 +24,17 @@ Moves are counted and star rating is updated accordingly.
 Matched cards are counted and once player matches all of them game ends.
 Clock is stopped and player's time, number of moves and rating is displayed.
 Player can restart game at anytime using restart button.
+
+## Dependencies
+
+Icons - Bootstrap CDN Font Awesome
+https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+
+Font - Google Coda
+https://fonts.googleapis.com/css?family=Coda
+
+jQuery CDN - Google
+https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
+
+shuffle function
+http://stackoverflow.com/a/2450976
